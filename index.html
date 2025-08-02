@@ -3,102 +3,88 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ねこバトルチャレンジ</title>
+    <title>おかしの国のけいさんバトル</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>ねこバトルチャレンジ</h1>
-    <button id="bgmToggleBtn">🔊</button>
 
-    <div id="modeSelectScreen" class="screen">
-        <h2>モードを選んでね！</h2>
-        <button id="grade1ModeBtn" class="mode-btn">🎒 １ねんせい</button>
-        <button id="grade2ModeBtn" class="mode-btn">🎒 ２ねんせい</button>
-        <button id="grade3ModeBtn" class="mode-btn">📚 ３ねんせい</button>
-        <button id="grade4ModeBtn" class="mode-btn">📚 ４ねんせい</button>
-        <button id="grade5ModeBtn" class="mode-btn">🎓 ５ねんせい</button>
-        <button id="trainingModeBtn" class="mode-btn">💪 トレーニング</button>
+    <div id="character-select-container">
+        <h1>しゅじんこうを えらぼう！</h1>
+        <div id="character-list"></div>
     </div>
 
-    <div id="startMethodScreen" class="screen">
-        <h2>どうやってはじめる？</h2>
-        <button id="startFromBeginningBtn" class="start-method-btn">はじめから (Lv 1)</button>
-        <button id="continueFromLastBtn" class="start-method-btn" style="display: none;">つづきから (Lv X)</button>
-    </div>
-
-    <div id="battleScreen" class="screen">
-        <div id="enemyArea" class="character-area">
-            <div class="character-info">
-                <span class="character-name" id="enemyName"></span>
-                <span class="character-hp-text">HP: <span id="enemyHPText"></span></span>
+    <div id="game-container" class="hidden">
+        <div id="enemy-area" class="character-area">
+             <div class="character-info">
+                <span id="enemy-name" class="character-name"></span>
+                <span class="character-hp-text">HP: <span id="enemy-hp-text"></span></span>
             </div>
-            <div class="hp-bar-container">
-                <div class="hp-bar" id="enemyHPBar"></div>
-            </div>
-            <div class="character-display" id="enemyCharacter"></div>
-            <div id="damageEffectContainer" style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); pointer-events: none; z-index: 5; height: 50px; width: 100px;"></div>
+            <div class="hp-bar-container"><div id="enemy-hp-bar" class="hp-bar"></div></div>
+            <div id="enemy-character" class="character-display"></div>
         </div>
-        <div id="questionArea">
-            <div id="question"></div>
-            <div id="answerChoices"></div>
-        </div>
-        <div id="playerArea" class="character-area">
-            <div class="character-display" id="playerCharacter">😺</div>
-            <div class="hp-bar-container">
-                <div class="hp-bar" id="playerHPBar"></div>
+        <div id="player-status-area" class="character-area">
+            <div id="player-character" class="character-display"></div>
+            <div id="player-info-text" class="character-name"></div>
+            <div class="status-bars">
+                <div class="bar-label">HP</div>
+                <div class="hp-bar-container"><div id="player-hp-bar" class="hp-bar"></div></div>
+                <div id="player-hp-text" class="bar-text"></div>
             </div>
-            <div class="character-info">
-                <span class="character-name">にゃんたろう</span>
-                <span class="character-hp-text">HP: <span id="playerHPText"></span></span>
+            <div class="status-bars">
+                <div class="bar-label">MP</div>
+                <div class="mp-bar-container"><div id="player-mp-bar" class="mp-bar"></div></div>
+                <div id="player-mp-text" class="bar-text"></div>
             </div>
         </div>
-        <div id="infoArea">
-            <div id="battleLog"></div>
-            <button id="startBtn"></button>
+        <div id="message-area"><p id="message-text"></p></div>
+        <div id="game-menu-area">
+            <div id="coin-display">💰 0 コイン</div>
+            <div>
+                <button id="study-btn">けいさん</button>
+                <button id="shop-btn">ショップ</button>
+            </div>
+        </div>
+        <div id="command-area">
+            <button id="attack-btn">たたかう</button>
+            <button id="skills-btn">とくぎ</button>
+            <button id="items-btn">どうぐ</button>
+            <button id="restart-btn" class="hidden">もういちど！</button>
         </div>
     </div>
 
-    <div id="trainingTypeSelectScreen" class="screen">
-        <h2>れんしゅうする ないよう を えらんでね！</h2>
-        <button class="training-type-btn" data-training-type="addsub1">かんたん たし算・ひき算</button>
-        <button class="training-type-btn" data-training-type="addsub2">ふつう たし算・ひき算</button>
-        <button class="training-type-btn" data-training-type="mul">かけ算 (九九マスター)</button>
-        <button class="training-type-btn" data-training-type="div">わり算 (あまりなし)</button>
-        <button id="backToModeSelectBtn">もどる</button>
-    </div>
-
-    <div id="trainingScreen" class="screen">
-        <div id="trainingStatus">
-            <span id="trainingTimer">のこり時間: 60秒</span>
-            <span id="trainingScore">たおした数: 0</span>
+    <div id="study-container" class="hidden">
+        <h2>けいさんチャレンジ！</h2>
+        <div id="question-progress"></div>
+        <div id="question-area"><div id="question-text"></div></div>
+        <div id="answer-area">
+            <input type="number" id="answer-input" placeholder="こたえ">
+            <button id="submit-answer-btn">けってい</button>
         </div>
-        <div id="trainingEnemyDisplay">💧</div>
-        <div id="trainingQuestion"></div>
-        <div id="trainingAnswerChoices"></div>
+        <div id="feedback-area"><p id="feedback-text"></p></div>
+        <button id="close-study-btn">もどる</button>
     </div>
 
-    <div id="trainingResultScreen" class="screen">
-        <h2>トレーニング おわり！</h2>
-        <div>けっか はっぴょう！</div>
-        <div id="finalScore" style="margin: 15px 0;">0 ひき たおした！</div>
-        <div id="personalBest">じこベスト: 0 ひき</div>
-        <div class="result-btn-area">
-            <button id="retryTrainingBtn" class="result-btn">もう一回！</button>
-            <button id="backToModeSelectBtnFromTraining" class="result-btn">モード選択へ</button>
+    <div id="shop-container" class="hidden">
+        <h2>🍰 ショップ 🧁</h2>
+        <p>いらっしゃい！何にするかい？</p>
+        <div id="shop-items-list"></div>
+        <div id="shop-info">
+            <p id="shop-message"></p>
+            <button id="close-shop-btn">お店を出る</button>
         </div>
     </div>
 
-    <div id="feedbackDisplay"></div>
-    <div id="comboDisplay"></div>
-
-    <div id="bossDefeatedOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); justify-content: center; align-items: center; z-index: 50; opacity: 0; transition: opacity 0.5s ease-in-out;">
-        <div id="bossDefeatedMessage" style="font-size: clamp(2em, 8vw, 4em); color: #ffd700; font-weight: bold; text-shadow: 3px 3px 5px rgba(0,0,0,0.8); text-align: center; transform: scale(0.5); opacity: 0; transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.3s ease-out;">
+    <div id="modal-container" class="hidden">
+        <div id="modal-content">
+            <div id="modal-list"></div>
+            <button id="modal-close-btn">もどる</button>
         </div>
     </div>
-
+    
+    <script src="gamedata.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
