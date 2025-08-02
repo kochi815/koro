@@ -7,10 +7,13 @@ button { font-family: 'M PLUS Rounded 1c', sans-serif; cursor: pointer; border-r
 /* --- 全画面共通コンテナ --- */
 #character-select-container, #home-container, #game-container, #study-container, #shop-container { width: 95%; max-width: 480px; background-color: #fff; padding: 20px; border-radius: 15px; border: 4px solid #b0c4de; box-shadow: 6px 6px 12px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 15px; }
 
-/* --- ★ホーム画面 --- */
+
+/* --- ホーム画面 --- */
 #home-player-status { display: flex; align-items: center; gap: 15px; background-color: #e7f3ff; padding: 10px; border-radius: 10px; }
 #home-player-emoji { font-size: 3em; }
-#home-player-name { font-size: 1.2em; font-weight: bold; flex-grow: 1; text-align: left; }
+#home-player-info { flex-grow: 1; text-align: left;}
+#home-player-name { font-size: 1.2em; font-weight: bold; }
+#home-player-level { font-size: 1.0em; color: #555; }
 #home-coin-display { font-size: 1.2em; font-weight: bold; color: #e67e22; }
 #home-menu { display: flex; flex-direction: column; gap: 15px; }
 .home-menu-btn { padding: 20px; font-size: 1.5em; font-weight: bold; color: white; border: none; }
@@ -22,14 +25,17 @@ button { font-family: 'M PLUS Rounded 1c', sans-serif; cursor: pointer; border-r
 .character-area { border: 3px solid #b0c4de; border-radius: 15px; padding: 10px; background-color: #fff; }
 #enemy-area { border-color: #ffb6c1; } #player-status-area { border-color: #87cefa; }
 .character-info { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1em; }
-.hp-bar-container, .mp-bar-container { height: 18px; background-color: #e9ecef; border-radius: 9px; overflow: hidden; border: 1px solid #dee2e6; flex-grow: 1; }
-.hp-bar, .mp-bar { height: 100%; width: 100%; transition: width 0.3s ease-in-out; }
+.hp-bar-container, .mp-bar-container, .exp-bar-container { height: 18px; background-color: #e9ecef; border-radius: 9px; overflow: hidden; border: 1px solid #dee2e6; flex-grow: 1; }
+.hp-bar, .mp-bar, .exp-bar { height: 100%; width: 100%; transition: width 0.3s ease-in-out; }
 .hp-bar { background: linear-gradient(to right, #4caf50, #81c784); } #enemy-area .hp-bar { background: linear-gradient(to right, #f44336, #e57373); }
 .mp-bar { background: linear-gradient(to right, #2196f3, #64b5f6); }
+.exp-bar { background: linear-gradient(to right, #ffc107, #ffd54f); }
 .character-display { font-size: 4em; transition: transform 0.2s ease; }
 .character-display.shake { animation: shake 0.3s; } @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } }
+.player-info-top { display: flex; justify-content: space-between; align-items: baseline; }
 #player-info-text { font-size: 1.2em; font-weight: bold; }
-.status-bars { display: flex; align-items: center; gap: 5px; margin-top: 5px; } .bar-label { font-size: 0.9em; font-weight: bold; } .bar-text { font-size: 0.9em; min-width: 60px; text-align: right; }
+#player-level-text { font-size: 1.0em; font-weight: bold; }
+.status-bars { display: flex; align-items: center; gap: 5px; margin-top: 5px; } .bar-label { font-size: 0.9em; font-weight: bold; min-width: 30px; } .bar-text { font-size: 0.9em; min-width: 60px; text-align: right; }
 #message-area { min-height: 4em; background-color: #f8f9fa; border-radius: 8px; border: 2px solid #ced4da; padding: 10px; font-size: 1.1em; font-weight: bold; }
 #command-area { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 #command-area button { padding: 12px; font-size: 1.1em; border-radius: 8px; background-color: #fff; }
@@ -37,16 +43,23 @@ button { font-family: 'M PLUS Rounded 1c', sans-serif; cursor: pointer; border-r
 .back-to-home-btn { position: absolute; top: 5px; left: 5px; background: #ddd; border: none; padding: 5px 10px; font-size: 0.8em; }
 
 /* --- ★勉強モード (更新) --- */
+#study-difficulty-select { display: flex; flex-direction: column; gap: 20px; }
+#study-difficulty-buttons { display: flex; flex-direction: column; gap: 15px; }
+.study-difficulty-btn { padding: 20px; font-size: 1.5em; font-weight: bold; color: white; border: none; background-color: #3498db; }
+.study-difficulty-btn span { font-size: 0.7em; font-weight: normal; }
+#close-study-btn { width: 100%; padding: 15px; background-color: #6c757d; color: white; border: none; font-size: 1.2em; }
+#back-to-difficulty-select-btn { width: 100%; padding: 15px; background-color: #6c757d; color: white; border: none; font-size: 1.2em; margin-top: 15px; }
+
+#study-question-screen { display: flex; flex-direction: column; gap: 15px; }
 #study-status { display: flex; justify-content: space-between; width: 100%; font-size: 1.2em; font-weight: bold; }
 #study-score { color: #e67e22; }
 #question-area { padding: 10px; background-color: #fff; border-radius: 10px; }
 #study-feedback-text { min-height: 1.5em; font-weight: bold; font-size: 1.2em; }
 #question-text { font-size: 2.5em; font-weight: 700; }
-#study-answer-choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
+#study-answer-choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0; }
 #study-answer-choices button { padding: 15px; font-size: 1.4em; font-weight: bold; background-color: #fff; color: #333; }
-#close-study-btn { width: 100%; padding: 15px; background-color: #6c757d; color: white; border: none; font-size: 1.2em; }
 
-/* --- ショップ・モーダル (変更なし) --- */
+/* --- ショップ・モーダル --- */
 #shop-container { background-color: #f8f9fa; }
 #shop-container button, #modal-close-btn { padding: 10px 20px; font-size: 1.1em; border: none; border-radius: 8px; color: white; cursor: pointer; }
 #close-shop-btn, #modal-close-btn { background-color: #6c757d; }

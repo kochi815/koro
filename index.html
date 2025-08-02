@@ -20,7 +20,10 @@
         <h2>ホーム</h2>
         <div id="home-player-status">
             <div id="home-player-emoji"></div>
-            <div id="home-player-name"></div>
+            <div id="home-player-info">
+                <div id="home-player-name"></div>
+                <div id="home-player-level"></div>
+            </div>
             <div id="home-coin-display"></div>
         </div>
         <div id="home-menu">
@@ -42,7 +45,10 @@
         </div>
         <div id="player-status-area" class="character-area">
             <div id="player-character" class="character-display"></div>
-            <div id="player-info-text" class="character-name"></div>
+            <div class="player-info-top">
+                <div id="player-info-text" class="character-name"></div>
+                <div id="player-level-text"></div>
+            </div>
             <div class="status-bars">
                 <div class="bar-label">HP</div>
                 <div class="hp-bar-container"><div id="player-hp-bar" class="hp-bar"></div></div>
@@ -52,6 +58,11 @@
                 <div class="bar-label">MP</div>
                 <div class="mp-bar-container"><div id="player-mp-bar" class="mp-bar"></div></div>
                 <div id="player-mp-text" class="bar-text"></div>
+            </div>
+            <div class="status-bars">
+                <div class="bar-label">EXP</div>
+                <div class="exp-bar-container"><div id="player-exp-bar" class="exp-bar"></div></div>
+                <div id="player-exp-text" class="bar-text"></div>
             </div>
         </div>
         <div id="message-area"><p id="message-text"></p></div>
@@ -64,18 +75,28 @@
     </div>
 
     <div id="study-container" class="hidden">
-        <h2>けいさんチャレンジ！</h2>
-        <div id="study-status">
-            <div id="question-progress"></div>
-            <div id="study-score">SCORE: 0</div>
-        </div>
-        <div id="question-area">
-            <p id="study-feedback-text"></p>
-            <div id="question-text"></div>
-        </div>
-        <div id="study-answer-choices">
+        <div id="study-difficulty-select">
+            <h2>なんのけいさんを する？</h2>
+            <div id="study-difficulty-buttons">
+                <button class="study-difficulty-btn" data-difficulty="easy">かんたん<br><span>（1けたの たしざん）</span></button>
+                <button class="study-difficulty-btn" data-difficulty="normal">ふつう<br><span>（2けたの たしざん）</span></button>
             </div>
-        <button id="close-study-btn">ホームへもどる</button>
+             <button id="close-study-btn">ホームへもどる</button>
+        </div>
+
+        <div id="study-question-screen" class="hidden">
+             <h2>けいさんチャレンジ！</h2>
+            <div id="study-status">
+                <div id="question-progress"></div>
+                <div id="study-score">SCORE: 0</div>
+            </div>
+            <div id="question-area">
+                <p id="study-feedback-text"></p>
+                <div id="question-text"></div>
+            </div>
+            <div id="study-answer-choices"></div>
+            <button id="back-to-difficulty-select-btn">もんだんをえらびなおす</button>
+        </div>
     </div>
 
     <div id="shop-container" class="hidden">
