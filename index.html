@@ -16,7 +16,22 @@
         <div id="character-list"></div>
     </div>
 
+    <div id="home-container" class="hidden">
+        <h2>ホーム</h2>
+        <div id="home-player-status">
+            <div id="home-player-emoji"></div>
+            <div id="home-player-name"></div>
+            <div id="home-coin-display"></div>
+        </div>
+        <div id="home-menu">
+            <button id="go-to-battle-btn" class="home-menu-btn">ぼうけんへ</button>
+            <button id="go-to-study-btn" class="home-menu-btn">けいさんトレーニング</button>
+            <button id="go-to-shop-btn" class="home-menu-btn">ショップ</button>
+        </div>
+    </div>
+
     <div id="game-container" class="hidden">
+        <button id="back-to-home-from-battle" class="back-to-home-btn">ホームへ</button>
         <div id="enemy-area" class="character-area">
              <div class="character-info">
                 <span id="enemy-name" class="character-name"></span>
@@ -40,13 +55,6 @@
             </div>
         </div>
         <div id="message-area"><p id="message-text"></p></div>
-        <div id="game-menu-area">
-            <div id="coin-display">💰 0 コイン</div>
-            <div>
-                <button id="study-btn">けいさん</button>
-                <button id="shop-btn">ショップ</button>
-            </div>
-        </div>
         <div id="command-area">
             <button id="attack-btn">たたかう</button>
             <button id="skills-btn">とくぎ</button>
@@ -57,14 +65,17 @@
 
     <div id="study-container" class="hidden">
         <h2>けいさんチャレンジ！</h2>
-        <div id="question-progress"></div>
-        <div id="question-area"><div id="question-text"></div></div>
-        <div id="answer-area">
-            <input type="number" id="answer-input" placeholder="こたえ">
-            <button id="submit-answer-btn">けってい</button>
+        <div id="study-status">
+            <div id="question-progress"></div>
+            <div id="study-score">SCORE: 0</div>
         </div>
-        <div id="feedback-area"><p id="feedback-text"></p></div>
-        <button id="close-study-btn">もどる</button>
+        <div id="question-area">
+            <p id="study-feedback-text"></p>
+            <div id="question-text"></div>
+        </div>
+        <div id="study-answer-choices">
+            </div>
+        <button id="close-study-btn">ホームへもどる</button>
     </div>
 
     <div id="shop-container" class="hidden">

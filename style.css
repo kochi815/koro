@@ -1,22 +1,28 @@
 /* --- 基本スタイル --- */
-body { font-family: 'M PLUS Rounded 1c', sans-serif; text-align: center; background-color: #fff0f5; margin: 0; padding: 15px; color: #5d4037; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+body { font-family: 'M PLUS Rounded 1c', sans-serif; text-align: center; background-color: #f0f8ff; margin: 0; padding: 15px; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
 .hidden { display: none !important; }
-h1, h2 { color: #ff7043; font-weight: 700; }
+h1, h2 { color: #0056b3; font-weight: 700; }
+button { font-family: 'M PLUS Rounded 1c', sans-serif; cursor: pointer; border-radius: 8px; border: 1px solid #999; }
 
 /* --- 全画面共通コンテナ --- */
-#character-select-container, #game-container, #study-container, #shop-container { width: 95%; max-width: 480px; background-color: #fff8e1; padding: 20px; border-radius: 15px; border: 4px solid #ffccbc; box-shadow: 6px 6px 12px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 15px; }
+#character-select-container, #home-container, #game-container, #study-container, #shop-container { width: 95%; max-width: 480px; background-color: #fff; padding: 20px; border-radius: 15px; border: 4px solid #b0c4de; box-shadow: 6px 6px 12px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 15px; }
 
-/* --- キャラクター選択画面 --- */
-#character-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
-.character-card { background-color: white; padding: 15px; border-radius: 10px; border: 2px solid #ccc; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
-.character-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); border-color: #ffab91; }
-.char-emoji { font-size: 3em; } .char-name { font-size: 1.2em; font-weight: bold; } .char-description { font-size: 0.8em; color: #666; }
+/* --- ★ホーム画面 --- */
+#home-player-status { display: flex; align-items: center; gap: 15px; background-color: #e7f3ff; padding: 10px; border-radius: 10px; }
+#home-player-emoji { font-size: 3em; }
+#home-player-name { font-size: 1.2em; font-weight: bold; flex-grow: 1; text-align: left; }
+#home-coin-display { font-size: 1.2em; font-weight: bold; color: #e67e22; }
+#home-menu { display: flex; flex-direction: column; gap: 15px; }
+.home-menu-btn { padding: 20px; font-size: 1.5em; font-weight: bold; color: white; border: none; }
+#go-to-battle-btn { background-color: #e74c3c; }
+#go-to-study-btn { background-color: #2ecc71; }
+#go-to-shop-btn { background-color: #f1c40f; }
 
 /* --- バトル画面 --- */
-.character-area { border: 3px solid #ffccbc; border-radius: 15px; padding: 10px; background-color: rgba(255, 255, 255, 0.8); }
-#enemy-area { border-color: #ffab91; } #player-status-area { border-color: #81d4fa; }
+.character-area { border: 3px solid #b0c4de; border-radius: 15px; padding: 10px; background-color: #fff; }
+#enemy-area { border-color: #ffb6c1; } #player-status-area { border-color: #87cefa; }
 .character-info { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1em; }
-.hp-bar-container, .mp-bar-container { height: 18px; background-color: #fce4ec; border-radius: 9px; overflow: hidden; border: 1px solid #f8bbd0; flex-grow: 1; }
+.hp-bar-container, .mp-bar-container { height: 18px; background-color: #e9ecef; border-radius: 9px; overflow: hidden; border: 1px solid #dee2e6; flex-grow: 1; }
 .hp-bar, .mp-bar { height: 100%; width: 100%; transition: width 0.3s ease-in-out; }
 .hp-bar { background: linear-gradient(to right, #4caf50, #81c784); } #enemy-area .hp-bar { background: linear-gradient(to right, #f44336, #e57373); }
 .mp-bar { background: linear-gradient(to right, #2196f3, #64b5f6); }
@@ -24,24 +30,28 @@ h1, h2 { color: #ff7043; font-weight: 700; }
 .character-display.shake { animation: shake 0.3s; } @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } }
 #player-info-text { font-size: 1.2em; font-weight: bold; }
 .status-bars { display: flex; align-items: center; gap: 5px; margin-top: 5px; } .bar-label { font-size: 0.9em; font-weight: bold; } .bar-text { font-size: 0.9em; min-width: 60px; text-align: right; }
-#message-area { min-height: 4em; background-color: #fff; border-radius: 8px; border: 2px solid #f8bbd0; padding: 10px; font-size: 1.1em; font-weight: bold; }
-#game-menu-area { display: flex; justify-content: space-between; align-items: center; }
-#coin-display { font-size: 1.2em; font-weight: bold; color: #e67e22; }
-#game-menu-area div { display: flex; gap: 10px; }
-#study-btn, #shop-btn { padding: 8px 15px; font-size: 1em; border: none; border-radius: 8px; color: white; cursor: pointer; }
-#study-btn { background-color: #2ecc71; } #shop-btn { background-color: #ffca28; color: #333; }
+#message-area { min-height: 4em; background-color: #f8f9fa; border-radius: 8px; border: 2px solid #ced4da; padding: 10px; font-size: 1.1em; font-weight: bold; }
 #command-area { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-#command-area button { padding: 12px; font-size: 1.1em; border-radius: 8px; border: 1px solid #999; background-color: #fff; cursor: pointer; }
-#restart-btn { grid-column: 1 / -1; background-color: #ff7043; }
+#command-area button { padding: 12px; font-size: 1.1em; border-radius: 8px; background-color: #fff; }
+#restart-btn { grid-column: 1 / -1; background-color: #ff7043; color: white; border: none; }
+.back-to-home-btn { position: absolute; top: 5px; left: 5px; background: #ddd; border: none; padding: 5px 10px; font-size: 0.8em; }
 
-/* --- 勉強・ショップ・モーダル共通 --- */
-#study-container button, #shop-container button { padding: 10px 20px; font-size: 1.1em; border: none; border-radius: 8px; color: white; cursor: pointer; }
-#close-study-btn, #close-shop-btn, #modal-close-btn { background-color: #bcaaa4; }
-#question-area { padding: 15px; background-color: #fff; border-radius: 10px; } #question-text { font-size: 2em; font-weight: 700; }
-#answer-area { display: flex; gap: 10px; } #answer-input { font-size: 1.5em; width: 100px; text-align: center; border-radius: 8px; } #submit-answer-btn { background-color: #f44336; }
-#feedback-area { min-height: 2em; font-weight: bold; font-size: 1.2em; }
-#shop-items-list { display: grid; gap: 10px; } .shop-item { display: flex; justify-content: space-between; align-items: center; background-color: white; padding: 10px; border-radius: 8px; } .shop-item-name { font-size: 1.1em; } .shop-item-buy-btn { background-color: #81d4fa; font-size: 0.9em; }
+/* --- ★勉強モード (更新) --- */
+#study-status { display: flex; justify-content: space-between; width: 100%; font-size: 1.2em; font-weight: bold; }
+#study-score { color: #e67e22; }
+#question-area { padding: 10px; background-color: #fff; border-radius: 10px; }
+#study-feedback-text { min-height: 1.5em; font-weight: bold; font-size: 1.2em; }
+#question-text { font-size: 2.5em; font-weight: 700; }
+#study-answer-choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
+#study-answer-choices button { padding: 15px; font-size: 1.4em; font-weight: bold; background-color: #fff; color: #333; }
+#close-study-btn { width: 100%; padding: 15px; background-color: #6c757d; color: white; border: none; font-size: 1.2em; }
+
+/* --- ショップ・モーダル (変更なし) --- */
+#shop-container { background-color: #f8f9fa; }
+#shop-container button, #modal-close-btn { padding: 10px 20px; font-size: 1.1em; border: none; border-radius: 8px; color: white; cursor: pointer; }
+#close-shop-btn, #modal-close-btn { background-color: #6c757d; }
+#shop-items-list { display: grid; gap: 10px; } .shop-item { display: flex; justify-content: space-between; align-items: center; background-color: white; padding: 10px; border-radius: 8px; } .shop-item-name { font-size: 1.1em; } .shop-item-buy-btn { background-color: #87cefa; font-size: 0.9em; border: none; color: white; padding: 8px 12px; border-radius: 6px; }
 #modal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 100; }
-#modal-content { background-color: #fff8e1; padding: 20px; border-radius: 15px; width: 90%; max-width: 400px; }
+#modal-content { background-color: #fff; padding: 20px; border-radius: 15px; width: 90%; max-width: 400px; }
 #modal-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
 #modal-list button { padding: 10px; font-size: 1em; border-radius: 8px; border: 1px solid #ccc; }
