@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>けいさんバトル！</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="game-container">
+        <div id="enemy-area">
+            <div id="enemy-name"></div>
+            <div id="enemy-emoji">❓</div>
+            <div class="hp-bar-container">
+                <span>HP:</span>
+                <div id="enemy-hp-bar">
+                    <div id="enemy-hp-value"></div>
+                </div>
+                <span id="enemy-hp-text">? / ?</span>
+            </div>
+        </div>
+
+        <div id="player-status-area">
+            <div id="player-name">なまえ</div>
+            <div class="status-row">
+                <div class="hp-bar-container">
+                    <span>HP:</span>
+                    <div id="player-hp-bar">
+                        <div id="player-hp-value"></div>
+                    </div>
+                    <span id="player-hp-text">? / ?</span>
+                </div>
+            </div>
+            <div class="status-row">
+                <div class="mp-bar-container">
+                    <span>MP:</span>
+                    <div id="player-mp-bar">
+                        <div id="player-mp-value"></div>
+                    </div>
+                    <span id="player-mp-text">? / ?</span>
+                </div>
+            </div>
+        </div>
+        
+        <div id="message-area">
+            <p id="message-text">冒険がはじまった！</p>
+        </div>
+
+        <div id="command-area">
+            <button id="attack-btn">たたかう</button>
+            <button id="skills-btn">とくぎ</button>
+            <button class="disabled-btn">どうぐ</button>
+            <button class="disabled-btn">にげる</button>
+        </div>
+    </div>
+
+    <div id="skills-modal" class="hidden">
+        <div id="skills-list">
+            </div>
+        <button id="close-skills-modal-btn">もどる</button>
+    </div>
+
+
+    <script src="game.js"></script>
+</body>
+</html>
