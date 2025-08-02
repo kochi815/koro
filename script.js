@@ -2,8 +2,75 @@
 // グローバル変数
 // ===================================
 let player = {}; let currentEnemy; let currentEnemyIndex = 0; let coins = 0;
+
 // ===================================
-// HTML要素の取得
+// 効果音とBGM
+// ===================================
+const sounds = {
+    // UI & System
+    click: new Audio('se_click.mp3'),
+    decision: new Audio('se_decision.mp3'),
+    cancel: new Audio('se_cancel.mp3'),
+    error: new Audio('se_error.mp3'),
+
+    // Battle
+    attack: new Audio('se_attack.mp3'),
+    attack_critical: new Audio('se_attack_critical.mp3'),
+    damage: new Audio('se_damage.mp3'),
+    heal: new Audio('se_heal.mp3'),
+    win: new Audio('se_win.mp3'),
+
+    // Study
+    correct: new Audio('se_correct.mp3'),
+    wrong: new Audio('se_wrong.mp3'),
+    coin: new Audio('se_coin.mp3'),
+
+    // BGM
+    bgm_title: new Audio('bgm_title.mp3'),
+    bgm_battle: new Audio('bgm_battle.mp3'),
+    bgm_shop: new Audio('bgm_shop.mp3'),
+    bgm_study: new Audio('bgm_study.mp3'),
+    bgm_clear: new Audio('bgm_clear.mp3'),
+    bgm_gameover: new Audio('bgm_gameover.mp3')
+};
+
+let currentBgm = null;
+Object.keys(sounds).forEach(key => {
+    if (key.startsWith('bgm')) {
+        sounds[key].loop = true;
+        sounds[key].volume = 0.5;
+    } else {
+        sounds[key].volume = 0.8;
+    }
+});
+
+function playSound(soundName) {
+    if (sounds[soundName]) {
+        sounds[soundName].currentTime = 0;
+        sounds[soundName].play().catch(e => console.error("Sound play failed:", e));
+    }
+}
+
+function playBgm(bgmName) {
+    if (currentBgm === sounds[bgmName]) return;
+    stopBgm();
+    if (sounds[bgmName]) {
+        currentBgm = sounds[bgmName];
+        currentBgm.play().catch(e => console.error("BGM play failed:", e));
+    }
+}
+
+function stopBgm() {
+    if (currentBgm) {
+        currentBgm.pause();
+        currentBgm.currentTime = 0;
+        currentBgm = null;
+    }
+}
+
+
+// ===================================
+// HTML要素の取得 (変更なし)
 // ===================================
 const characterSelectContainer = document.getElementById('character-select-container');
 const characterListEl = document.getElementById('character-list');
@@ -45,12 +112,16 @@ const modalCloseBtn = document.getElementById('modal-close-btn');
 // ゲームの初期化・画面遷移
 // ===================================
 function initializeCharacterSelection() {
+    playBgm('bgm_title');
     characterListEl.innerHTML = '';
     CHARACTERS.forEach(char => {
         const card = document.createElement('div');
         card.className = 'character-card';
         card.innerHTML = `<div class="char-emoji">${char.emoji}</div><div class="char-name">${char.name}</div><div class="char-description">${char.description}</div>`;
-        card.addEventListener('click', () => selectCharacter(char.id));
+        card.addEventListener('click', () => {
+            playSound('decision');
+            selectCharacter(char.id)
+        });
         characterListEl.appendChild(card);
     });
 }
@@ -58,7 +129,7 @@ function selectCharacter(charId) {
     const data = CHARACTERS.find(c => c.id === charId);
     player = {
         ...JSON.parse(JSON.stringify(data)), hp: data.maxHp, mp: data.maxMp, weapon: null, armor: null,
-        items: [{ id: 'healing_cupcake', name: 'いやしのカップケーキ', count: 2, emoji: '🧁' }],
+        items: [{ id: 'herb', name: 'やくそう', count: 2, emoji: '🌿' }],
         get attack() { return this.baseAttack + (this.weapon ? this.weapon.power : 0); },
         get defense() { return this.baseDefense + (this.armor ? this.armor.power : 0); },
     };
@@ -68,19 +139,22 @@ function selectCharacter(charId) {
 }
 function startGame() {
     currentEnemyIndex = 0;
-    displayMessage("わるい魔王モンブランに、おともだちの『いちごひめ』🍓がさらわれた！<br>けいさんパワーでモンスターをやっつけて、いちごひめを助けにいこう！");
+    displayMessage("わるい魔王😈に、おともだちの『姫』👸がさらわれた！<br>けいさんパワーでモンスターをやっつけて、姫を助けにいこう！");
+    playBgm('bgm_battle');
     setTimeout(() => {
         setupNextEnemy();
     }, 4000);
 }
 function restartGame() {
+    playSound('decision');
     player.hp = player.maxHp;
     player.mp = player.maxMp;
     currentEnemyIndex = 0;
+    playBgm('bgm_battle');
     setupNextEnemy();
 }
 // ===================================
-// 表示更新
+// 表示更新 (変更なし)
 // ===================================
 function updateAllDisplays() { updatePlayerStatus(); updateEnemyStatus(); updateCoinDisplay(); }
 function updatePlayerStatus() {
@@ -119,18 +193,21 @@ function playerTurn(action, id = null) {
     closeModal();
     let message = ''; let isTurnEnd = true;
     if (action === 'attack') {
+        playSound('attack');
         const damage = Math.max(0, player.attack - currentEnemy.defense);
         message = `${player.name}のこうげき！ ${currentEnemy.name}に ${damage} のダメージ！`;
         currentEnemy.hp = Math.max(0, currentEnemy.hp - damage);
     } else if (action === 'skill') {
         const skill = player.skills.find(s => s.id === id);
-        if (player.mp < skill.cost) { displayMessage('MPがたりない！'); isTurnEnd = false; }
+        if (player.mp < skill.cost) { playSound('error'); displayMessage('MPがたりない！'); isTurnEnd = false; }
         else {
             player.mp -= skill.cost;
             if (skill.type === 'heal') {
+                playSound('heal');
                 player.hp = Math.min(player.maxHp, player.hp + skill.amount);
                 message = `${player.name}は「${skill.name}」をつかった！ HPが ${skill.amount} かいふく！`;
             } else {
+                playSound('attack_critical'); // スキルは派手な音に
                 const damage = Math.max(0, Math.floor(player.attack * skill.power) - currentEnemy.defense);
                 message = `${player.name}は「${skill.name}」をつかった！ ${currentEnemy.name}に ${damage} のダメージ！`;
                 currentEnemy.hp = Math.max(0, currentEnemy.hp - damage);
@@ -138,10 +215,12 @@ function playerTurn(action, id = null) {
         }
     } else if (action === 'item') {
         const item = player.items.find(i => i.id === id);
-        if (item.id === 'healing_cupcake') {
+        if (item.id === 'herb') {
+            playSound('heal');
             player.hp = Math.min(player.maxHp, player.hp + 30);
             message = `${player.name}は ${item.name} をつかった！ HPが 30 かいふく！`;
-        } else if (item.id === 'magic_macaron') {
+        } else if (item.id === 'magic_nut') {
+            playSound('heal');
             player.mp = Math.min(player.maxMp, player.mp + 20);
             message = `${player.name}は ${item.name} をつかった！ MPが 20 かいふく！`;
         }
@@ -159,6 +238,7 @@ function playerTurn(action, id = null) {
 }
 function enemyTurn() {
     if (currentEnemy.hp <= 0) return;
+    playSound('damage');
     const damage = Math.max(0, currentEnemy.attack - player.defense);
     player.hp = Math.max(0, player.hp - damage);
     displayMessage(`${currentEnemy.name}のこうげき！ ${player.name}は ${damage} のダメージをうけた！`);
@@ -169,17 +249,22 @@ function enemyTurn() {
     else { showBattleCommands(true); }
 }
 function winBattle() {
+    playSound('win');
     displayMessage(`${currentEnemy.name}をやっつけた！`);
     currentEnemyIndex++;
     setTimeout(setupNextEnemy, 2000);
 }
 function loseBattle() {
+    stopBgm();
+    playBgm('bgm_gameover');
     displayMessage(`${player.name}はたおれてしまった... GAME OVER`);
     showBattleCommands(false);
 }
 function gameClear() {
-    displayMessage('すべてのモンスターをやっつけて、いちごひめを救いだした！<br>おめでとう！GAME CLEAR！');
-    enemyCharacterEl.textContent = '🍓';
+    stopBgm();
+    playBgm('bgm_clear');
+    displayMessage('魔王をやっつけて、姫を救いだした！<br>おめでとう！GAME CLEAR！');
+    enemyCharacterEl.textContent = '👸';
     showBattleCommands(false);
 }
 function showBattleCommands(show) {
@@ -192,11 +277,12 @@ function showBattleCommands(show) {
 // ===================================
 // 勉強・ショップ・モーダル
 // ===================================
-function openStudyMode() { studyContainer.classList.remove('hidden'); gameContainer.classList.add('hidden'); studySessionTotal = 0; studySessionCorrect = 0; displayNextQuestion(); }
-function closeStudyMode() { studyContainer.classList.add('hidden'); gameContainer.classList.remove('hidden'); }
-function openShop() { shopContainer.classList.remove('hidden'); gameContainer.classList.add('hidden'); shopMessageEl.textContent = `現在の所持コイン: ${coins}コイン`; renderShopItems(); }
-function closeShop() { shopContainer.classList.add('hidden'); gameContainer.classList.remove('hidden'); }
+function openStudyMode() { playSound('click'); stopBgm(); playBgm('bgm_study'); studyContainer.classList.remove('hidden'); gameContainer.classList.add('hidden'); studySessionTotal = 0; studySessionCorrect = 0; displayNextQuestion(); }
+function closeStudyMode() { playSound('cancel'); stopBgm(); playBgm('bgm_battle'); studyContainer.classList.add('hidden'); gameContainer.classList.remove('hidden'); }
+function openShop() { playSound('click'); stopBgm(); playBgm('bgm_shop'); shopContainer.classList.remove('hidden'); gameContainer.classList.add('hidden'); shopMessageEl.textContent = `現在の所持コイン: ${coins}コイン`; renderShopItems(); }
+function closeShop() { playSound('cancel'); stopBgm(); playBgm('bgm_battle'); shopContainer.classList.add('hidden'); gameContainer.classList.remove('hidden'); }
 function openModal(type) {
+    playSound('click');
     modalContainer.classList.remove('hidden');
     modalListEl.innerHTML = '';
     let listData;
@@ -212,7 +298,7 @@ function openModal(type) {
         modalListEl.appendChild(btn);
     });
 }
-function closeModal() { modalContainer.classList.add('hidden'); }
+function closeModal() { playSound('cancel'); modalContainer.classList.add('hidden'); }
 let currentStudyQuestion = {}; let studySessionCorrect = 0; let studySessionTotal = 0;
 function displayNextQuestion() {
     if (studySessionTotal >= 10) { endStudySession(); return; }
@@ -226,8 +312,10 @@ function displayNextQuestion() {
 }
 function handleSubmitAnswer() {
     if (parseInt(answerInput.value) === currentStudyQuestion.answer) {
+        playSound('correct');
         feedbackTextEl.textContent = "せいかい！⭕️"; studySessionCorrect++;
     } else {
+        playSound('wrong');
         feedbackTextEl.textContent = `ざんねん！正解は ${currentStudyQuestion.answer} ❌`;
     }
     setTimeout(displayNextQuestion, 1200);
@@ -235,6 +323,7 @@ function handleSubmitAnswer() {
 function endStudySession() {
     const earnedCoins = studySessionCorrect * 10;
     coins += earnedCoins;
+    if (earnedCoins > 0) playSound('coin');
     feedbackTextEl.textContent = `おつかれさま！ ${studySessionCorrect}問せいかいで ${earnedCoins}コイン GET！`;
     updateCoinDisplay();
 }
@@ -248,7 +337,8 @@ function renderShopItems() {
     });
 }
 function buyItem(item) {
-    if (coins < item.cost) { shopMessageEl.textContent = 'コインがたりないよ！'; return; }
+    if (coins < item.cost) { playSound('error'); shopMessageEl.textContent = 'コインがたりないよ！'; return; }
+    playSound('coin');
     coins -= item.cost;
     updateCoinDisplay();
     shopMessageEl.textContent = `${item.name} をてにいれた！`;
