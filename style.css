@@ -1,207 +1,212 @@
+/* --- 基本スタイル等 --- */
 body {
-    font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
-    background-color: #ffebee; /* 淡いピンク */
-    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpattern id='p' width='4' height='4' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23f8bbd0'/%3E%3Ccircle cx='3' cy='3' r='1' fill='%23f8bbd0'/%3E%3C/pattern%3E%3Crect width='40' height='40' fill='url(%23p)'/%3E%3C/svg%3E"); /* ドット柄の背景 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-}
-
-#game-container {
-    width: 95%;
-    max-width: 520px; /* 少し広げます */
-    border: 4px solid #f48fb1; /* 少し太めのピンクのborder */
-    border-radius: 15px;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 6px 6px 12px rgba(0,0,0,0.15); /* 少し強めの影 */
-}
-
-/* 敵エリア */
-#enemy-area {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
     text-align: center;
-    margin-bottom: 25px;
-    background-color: #e1f5fe; /* 淡い水色 */
-    padding: 15px;
-    border-radius: 12px;
-    border: 2px solid #81d4fa;
-}
-
-#enemy-name {
-    font-size: 1.4em;
-    font-weight: bold;
-    color: #1e88e5; /* 少し濃い青 */
-    margin-bottom: 5px;
-}
-
-#enemy-emoji {
-    font-size: 90px; /* 少し大きく */
-    line-height: 1.2;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.2); /* 少し影をつけて立体感を */
-}
-
-/* HP/MPバー */
-.hp-bar-container, .mp-bar-container {
-    display: flex;
-    align-items: center;
-    margin-top: 8px;
-}
-.hp-bar-container span, .mp-bar-container span {
-    margin-right: 8px;
-    font-size: 1em;
-    color: #616161;
-}
-#enemy-hp-bar, #player-hp-bar, #player-mp-bar {
-    flex-grow: 1;
-    height: 22px; /* 少し高く */
-    background-color: #e0e0e0;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 2px solid #bdbdbd;
-}
-#enemy-hp-value, #player-hp-value {
-    height: 100%;
-    background-color: #8bc34a; /* 明るい緑 */
-    border-radius: 12px 0 0 12px;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.2); /* 少し影 */
-}
-#player-mp-value {
-    height: 100%;
-    background-color: #64b5f6; /* 明るい青 */
-    border-radius: 12px 0 0 12px;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.2); /* 少し影 */
-}
-#enemy-hp-text, #player-hp-text, #player-mp-text {
-    margin-left: 10px;
-    font-size: 1em;
-    min-width: 70px;
-    text-align: right;
-    color: #424242;
-    text-shadow: 1px 1px 1px rgba(255,255,255,0.8); /* 少し白で縁取り風 */
-}
-
-/* 主人公ステータスエリア */
-#player-status-area {
-    background-color: #fff8e1; /* 淡い黄色 */
-    padding: 15px;
-    border-radius: 12px;
-    border: 2px solid #ffecb3;
-    margin-bottom: 20px;
-}
-#player-name {
-    font-weight: bold;
-    font-size: 1.3em;
-    margin-bottom: 8px;
-    color: #f9a825; /* 少し濃い黄色 */
-    text-shadow: 1px 1px 2px rgba(255,255,255,0.7);
-}
-.status-row {
-    margin-bottom: 5px;
-}
-
-/* メッセージエリア */
-#message-area {
-    min-height: 8em; /* 少し高く */
-    margin: 20px 0;
-    padding: 15px;
-    border: 3px solid #a1887f; /* 茶色 */
-    border-radius: 8px;
-    background-color: #d7ccc8; /* 薄い茶色 */
-    overflow-y: auto;
-    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1);
-}
-#message-text {
+    background-color: #fdf6e3; /* 通常背景 */
     margin: 0;
-    padding: 5px;
-    line-height: 1.6;
-    color: #3e2723;
-}
-
-/* コマンドエリア */
-#command-area {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-#command-area button {
     padding: 15px;
-    font-size: 1.2em;
-    border-radius: 10px;
-    border: none;
-    background-color: #90caf9; /* 青 */
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    box-shadow: 3px 3px 6px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease-out;
+    position: relative; /* フィードバック表示の位置基準用 */
+    min-height: 100vh;
+    box-sizing: border-box;
+    overflow-x: hidden; /* 横スクロール防止 */
 }
-#command-area button:hover {
-    background-color: #64b5f6; /* 少し明るい青 */
-    transform: scale(1.05); /* 少しだけ大きく */
+body.boss-battle-bg {
+    background-color: #ffebee; /* ボス戦背景 */
 }
-#command-area button:active {
-    transform: scale(1.0); /* 押したときに元に戻る */
-}
-.disabled-btn {
-    background-color: #bdbdbd !important;
-    color: #f5f5f5;
-    cursor: not-allowed;
-    transform: scale(1.0) !important;
-    box-shadow: none;
+body.training-bg {
+    background-color: #e3f2fd; /* トレーニング背景 */
 }
 
-/* とくぎモーダル */
-#skills-modal {
-    background-color: rgba(0,0,0,0.5); /* 半透明の黒 */
+h1 {
+    font-size: 1.8em;
+    color: #d35400; /* オレンジ系 */
+    margin-bottom: 10px;
+    font-weight: 700;
 }
-#skills-list {
-    background-color: #fff;
-    padding: 25px;
-    border-radius: 15px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 画面幅に合わせて列数を調整 */
-    gap: 15px;
-    max-width: 450px;
-    box-shadow: 4px 4px 8px rgba(0,0,0,0.1);
-}
-#skills-list button {
-    padding: 12px;
-    font-size: 1em;
-    border: 2px solid #4db6ac; /* 緑 */
-    border-radius: 8px;
-    background-color: #b2ebf2; /* 薄い緑 */
-    color: #26a69a; /* 濃い緑 */
+button {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
-}
-#skills-list button:hover {
-    background-color: #80cbc4; /* 少し濃い緑 */
-    color: white;
-}
-#skills-list button:disabled {
-    background-color: #e0f2f7;
-    color: #808080;
-    border-color: #e0f2f7;
-    cursor: not-allowed;
-}
-#close-skills-modal-btn {
-    position: absolute;
-    bottom: 10%;
-    padding: 18px 35px;
-    font-size: 1.3em;
-    background-color: #ffab91; /* オレンジ */
-    color: white;
+    transition: background-color 0.2s, transform 0.1s;
     border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    box-shadow: 3px 3px 6px rgba(0,0,0,0.1);
 }
-#close-skills-modal-btn:hover {
-    background-color: #f4511e; /* 少し濃いオレンジ */
-    transform: scale(1.05);
+button:active:not(:disabled) {
+     transform: scale(0.97);
 }
-#close-skills-modal-btn:active {
-    transform: scale(1.0);
+button:disabled {
+     cursor: not-allowed;
+     opacity: 0.6;
+}
+
+/* --- BGMトグルボタン --- */
+#bgmToggleBtn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.8em;
+    background: none;
+    border: none;
+    padding: 5px;
+    opacity: 0.7;
+    z-index: 20; /* 他の要素より手前に */
+}
+#bgmToggleBtn:hover {
+     opacity: 1;
+}
+#bgmToggleBtn.muted {
+    /* mutedクラスでアイコンを直接変えるのではなく、中身のテキストを変えるのでCSSはシンプルに */
+}
+
+/* --- 画面コンテナ --- */
+.screen {
+    display: none; /* 基本は非表示 */
+    padding-top: 30px;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+#modeSelectScreen { display: flex; } /* 初期表示 */
+
+/* --- モード選択画面 --- */
+#modeSelectScreen h2 { font-size: 1.5em; color: #555; margin-bottom: 10px; }
+.mode-btn { font-size: 1.1em; padding: 10px 25px; border-radius: 18px; color: white; min-width: 200px; margin-bottom: 5px; }
+#grade1ModeBtn { background-color: #87cefa; } #grade2ModeBtn { background-color: #ffb6c1; } #grade3ModeBtn { background-color: #90ee90; } #grade4ModeBtn { background-color: #ffcc80; } #grade5ModeBtn { background-color: #ba55d3; } #trainingModeBtn { background-color: #ff7f50; }
+#grade1ModeBtn:hover { background-color: #5abcd8; } #grade2ModeBtn:hover { background-color: #ff9aaa; } #grade3ModeBtn:hover { background-color: #66cdab; } #grade4ModeBtn:hover { background-color: #ffa726; } #grade5ModeBtn:hover { background-color: #9932cc; } #trainingModeBtn:hover { background-color: #ff6347; }
+
+/* --- スタート方法選択画面 --- */
+#startMethodScreen h2 { font-size: 1.5em; color: #555; }
+.start-method-btn { font-size: 1.4em; padding: 15px 40px; border-radius: 25px; color: white; min-width: 250px; }
+#startFromBeginningBtn { background-color: #a5d6a7; } #continueFromLastBtn { background-color: #90caf9; }
+#startFromBeginningBtn:hover { background-color: #81c784; } #continueFromLastBtn:hover:not(:disabled) { background-color: #64b5f6; }
+
+/* --- トレーニングタイプ選択画面 --- */
+#trainingTypeSelectScreen { gap: 15px; }
+#trainingTypeSelectScreen h2 { font-size: 1.5em; color: #555; }
+.training-type-btn { font-size: 1.2em; padding: 12px 30px; border-radius: 20px; color: white; min-width: 280px; background-color: #4db6ac; }
+ .training-type-btn:hover { background-color: #26a69a; }
+#backToModeSelectBtn { font-size: 1em; padding: 8px 20px; background-color: #bdbdbd; color: #fff; border-radius: 15px; margin-top: 10px; } /* 戻るボタン */
+#backToModeSelectBtn:hover { background-color: #9e9e9e;}
+
+/* --- バトル画面 --- */
+#battleScreen { gap: 10px; }
+.character-area { border: 2px solid #eee; border-radius: 10px; padding: 10px; margin: 5px 0; width: 90%; max-width: 400px; background-color: rgba(255, 255, 255, 0.8); box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative; }
+#enemyArea { border-color: #e74c3c; }
+#playerArea { border-color: #3498db; }
+.character-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-weight: bold; }
+.character-name { font-size: 1.1em; }
+.character-hp-text { font-size: 1em; }
+.hp-bar-container { height: 15px; background-color: #eee; border-radius: 8px; overflow: hidden; border: 1px solid #ddd; }
+.hp-bar { height: 100%; width: 100%; border-radius: 6px; transition: width 0.3s ease-in-out; }
+#enemyArea .hp-bar { background-color: #f44336; }
+#playerArea .hp-bar { background-color: #4caf50; }
+.character-display { font-size: 3em; margin: 5px 0; transition: transform 0.1s ease-in-out, opacity 0.3s ease-out; opacity: 1; }
+.character-display.defeated { opacity: 0; transform: scale(0.5) rotate(30deg); }
+#question { font-size: 2.2em; margin: 15px 0; color: #2c3e50; font-weight: 700; min-height: 1.3em; }
+#answerChoices { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 10px; margin-bottom: 10px; }
+.choice-btn { font-size: 1.3em; padding: 10px 18px; border-radius: 8px; border: 2px solid #f39c12; background-color: #fff; color: #333; min-width: 70px; }
+.choice-btn:hover:not(:disabled) { background-color: #fef9e7; }
+.choice-btn:disabled { background-color: #eee; border-color: #ccc; color: #aaa; }
+#battleLog { font-size: 1.1em; min-height: 1.5em; margin: 10px 0; color: #c0392b; font-weight: bold; }
+#startBtn { font-size: 1.1em; padding: 10px 30px; margin: 15px 0 5px 0; border-radius: 20px; background-color: #e67e22; color: white; min-width: 160px; }
+#startBtn:hover { background-color: #d35400; }
+
+/* --- トレーニング画面 --- */
+#trainingScreen { gap: 15px; }
+#trainingStatus { display: flex; justify-content: space-around; width: 90%; max-width: 400px; font-size: 1.4em; font-weight: bold;}
+#trainingTimer { color: #ff9800; }
+#trainingScore { color: #4caf50; }
+#trainingEnemyDisplay { font-size: 4em; margin: 10px 0; transition: opacity 0.2s, transform 0.2s; }
+#trainingEnemyDisplay.defeated { opacity: 0; transform: scale(0.5); }
+#trainingQuestion { font-size: 2.5em; margin: 10px 0; color: #2c3e50; font-weight: 700; min-height: 1.3em; }
+#trainingAnswerChoices { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 10px; margin-bottom: 10px; }
+
+/* --- トレーニング結果画面 --- */
+#trainingResultScreen { gap: 15px; }
+#trainingResultScreen h2 { font-size: 1.8em; color: #00796b;}
+#finalScore { font-size: 2.5em; font-weight: bold; color: #ff6f61; }
+#personalBest { font-size: 1.2em; color: #555; }
+.result-btn-area { display: flex; gap: 15px; margin-top: 15px;}
+.result-btn { font-size: 1.1em; padding: 10px 25px; border-radius: 18px; color: white; min-width: 150px; }
+#retryTrainingBtn { background-color: #66bb6a; }
+#backToModeSelectBtnFromTraining { background-color: #bdbdbd; }
+#retryTrainingBtn:hover { background-color: #4caf50; }
+#backToModeSelectBtnFromTraining:hover { background-color: #9e9e9e; }
+
+/* --- 共通演出系 --- */
+#feedbackDisplay { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%) scale(0.8); font-size: 3em; font-weight: bold; color: #fff; background-color: rgba(0, 0, 0, 0.6); padding: 10px 25px; border-radius: 15px; opacity: 0; transition: opacity 0.2s ease-out, transform 0.2s ease-out; pointer-events: none; z-index: 10; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+#feedbackDisplay.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+#feedbackDisplay.critical { color: #ffeb3b; } #feedbackDisplay.perfect { color: #81d4fa; } #feedbackDisplay.great { color: #a5d6a7; } #feedbackDisplay.good { color: #fff; } #feedbackDisplay.slow { color: #ef9a9a; } #feedbackDisplay.wrong { color: #f44336; background-color: rgba(255, 255, 255, 0.8); text-shadow: none;}
+#comboDisplay { position: absolute; top: 60%; left: 50%; transform: translateX(-50%); font-size: 2.5em; font-weight: bold; color: #ff9800; opacity: 0; transition: opacity 0.2s, transform 0.2s; pointer-events: none; z-index: 5; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+#comboDisplay.show { opacity: 1; animation: comboBounce 0.3s ease-out; }
+#comboDisplay.great-combo { color: #f44336; } #comboDisplay.amazing-combo { color: #9c27b0; }
+@keyframes comboBounce { 0% { transform: translateX(-50%) scale(0.8); } 50% { transform: translateX(-50%) scale(1.1); } 100% { transform: translateX(-50%) scale(1); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 50% { transform: translateX(3px); } 75% { transform: translateX(-3px); } }
+.shake-animation { animation: shake 0.2s ease-in-out; }
+body.feedback-flash { background-color: #fff3e0; }
+
+/* --- ダメージエフェクトのスタイル --- */
+.damage-popup {
+    position: absolute; /* 位置を細かく調整できるようにする */
+    left: 50%; /* 親要素(damageEffectContainer)の真ん中を基準に */
+    font-size: 1.8em; /* 文字の大きさ */
+    font-weight: bold; /* 太字にする */
+    color: #f00; /* ダメージ色 (赤) */
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.7); /* 白い縁取りをつけて見やすくする */
+    animation: damageFadeUp 0.8s ease-out forwards; /* アニメーションを設定 */
+    white-space: nowrap; /* 数字が途中で改行しないようにする */
+    transform: translateX(-50%); /* 要素自体の中心に位置を合わせる */
+    user-select: none; /* テキスト選択できないように */
+}
+/* Critical Hitの時の特別なスタイル */
+.damage-popup.critical-damage {
+    color: #ffeb3b; /* Critical Hit時の色 (黄色) */
+    font-size: 2.4em; /* 通常より少し大きく */
+    font-weight: 900; /* さらに太く */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8); /* 黒い影で強調 */
+}
+
+/* ダメージが上に消えるアニメーションの設定 */
+@keyframes damageFadeUp {
+    0% { /* アニメーション開始時 */
+        opacity: 1; /* 完全に見える */
+        transform: translate(-50%, 0); /* 元の位置 */
+    }
+    100% { /* アニメーション終了時 */
+        opacity: 0; /* 完全に見えなくなる */
+        transform: translate(-50%, -50px); /* 上に50px移動 */
+    }
+}
+        
+/* --- ボス撃破演出の表示スタイル --- */
+#bossDefeatedOverlay {
+    transition: opacity 0.5s ease-in-out;
+}
+#bossDefeatedOverlay.show {
+    display: flex; /* display:none から flex に変えて表示 */
+    opacity: 1;    /* 透明から完全表示に */
+}
+#bossDefeatedMessage {
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.3s ease-out;
+}
+#bossDefeatedOverlay.show #bossDefeatedMessage {
+    opacity: 1;    /* 透明から完全表示に */
+    transform: scale(1); /* 少し拡大しながら表示される感じ */
+}
+
+/* --- レスポンシブ --- */
+@media (max-width: 600px) {
+     h1 { font-size: 1.6em; }
+     .character-display { font-size: 2.5em; }
+     #question, #trainingQuestion { font-size: 1.8em; }
+     .choice-btn { font-size: 1.1em; padding: 8px 15px; min-width: 60px; }
+     #startBtn { font-size: 1em; padding: 10px 25px; min-width: 140px; }
+     #battleLog { font-size: 1em; }
+     #feedbackDisplay { font-size: 2.5em; padding: 8px 20px;}
+     #comboDisplay { font-size: 2em; top: 55%; }
+     #bgmToggleBtn { font-size: 1.5em; top: 10px; right: 10px; }
+     .mode-btn, .start-method-btn, .training-type-btn { font-size: 1.1em; padding: 10px 25px; min-width: 180px; }
+     .result-btn { font-size: 1em; padding: 10px 20px; min-width: 130px; }
+     #trainingStatus { font-size: 1.2em;}
 }
