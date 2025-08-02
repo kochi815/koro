@@ -11,7 +11,6 @@ const gameContainer = document.getElementById('game-container');
 const studyContainer = document.getElementById('study-container');
 const shopContainer = document.getElementById('shop-container');
 const modalContainer = document.getElementById('modal-container');
-// --- キャラクター表示 ---
 const playerNameEl = document.getElementById('player-info-text');
 const playerHpTextEl = document.getElementById('player-hp-text');
 const playerMpTextEl = document.getElementById('player-mp-text');
@@ -22,7 +21,6 @@ const enemyNameEl = document.getElementById('enemy-name');
 const enemyHpTextEl = document.getElementById('enemy-hp-text');
 const enemyHpBarEl = document.getElementById('enemy-hp-bar');
 const enemyCharacterEl = document.getElementById('enemy-character');
-// --- ボタン・メッセージなど ---
 const messageTextEl = document.getElementById('message-text');
 const attackBtn = document.getElementById('attack-btn');
 const skillsBtn = document.getElementById('skills-btn');
@@ -31,19 +29,15 @@ const restartBtn = document.getElementById('restart-btn');
 const studyBtn = document.getElementById('study-btn');
 const shopBtn = document.getElementById('shop-btn');
 const coinDisplayEl = document.getElementById('coin-display');
-// --- 勉強モード ---
 const closeStudyBtn = document.getElementById('close-study-btn');
 const questionProgressEl = document.getElementById('question-progress');
 const questionTextEl = document.getElementById('question-text');
 const answerInput = document.getElementById('answer-input');
 const submitAnswerBtn = document.getElementById('submit-answer-btn');
 const feedbackTextEl = document.getElementById('feedback-text');
-// --- ショップ ---
 const closeShopBtn = document.getElementById('close-shop-btn');
 const shopItemsListEl = document.getElementById('shop-items-list');
 const shopMessageEl = document.getElementById('shop-message');
-// --- モーダル ---
-const modalContentEl = document.getElementById('modal-content');
 const modalListEl = document.getElementById('modal-list');
 const modalCloseBtn = document.getElementById('modal-close-btn');
 
@@ -74,21 +68,21 @@ function selectCharacter(charId) {
 }
 function startGame() {
     currentEnemyIndex = 0;
-    setupNextEnemy();
+    displayMessage("わるい魔王モンブランに、おともだちの『いちごひめ』🍓がさらわれた！<br>けいさんパワーでモンスターをやっつけて、いちごひめを助けにいこう！");
+    setTimeout(() => {
+        setupNextEnemy();
+    }, 4000);
 }
 function restartGame() {
     player.hp = player.maxHp;
     player.mp = player.maxMp;
-    startGame();
+    currentEnemyIndex = 0;
+    setupNextEnemy();
 }
 // ===================================
 // 表示更新
 // ===================================
-function updateAllDisplays() {
-    updatePlayerStatus();
-    updateEnemyStatus();
-    updateCoinDisplay();
-}
+function updateAllDisplays() { updatePlayerStatus(); updateEnemyStatus(); updateCoinDisplay(); }
 function updatePlayerStatus() {
     playerNameEl.textContent = player.name;
     playerCharacterEl.textContent = player.emoji;
@@ -184,7 +178,8 @@ function loseBattle() {
     showBattleCommands(false);
 }
 function gameClear() {
-    displayMessage('すべてのモンスターをやっつけた！おめでとう！');
+    displayMessage('すべてのモンスターをやっつけて、いちごひめを救いだした！<br>おめでとう！GAME CLEAR！');
+    enemyCharacterEl.textContent = '🍓';
     showBattleCommands(false);
 }
 function showBattleCommands(show) {
@@ -197,9 +192,9 @@ function showBattleCommands(show) {
 // ===================================
 // 勉強・ショップ・モーダル
 // ===================================
-function openStudyMode() { studyContainer.classList.remove('hidden'); gameContainer.classList.add('hidden'); displayNextQuestion(); }
+function openStudyMode() { studyContainer.classList.remove('hidden'); gameContainer.classList.add('hidden'); studySessionTotal = 0; studySessionCorrect = 0; displayNextQuestion(); }
 function closeStudyMode() { studyContainer.classList.add('hidden'); gameContainer.classList.remove('hidden'); }
-function openShop() { shopContainer.classList.remove('hidden'); gameContainer.classList.add('hidden'); shopMessageEl.textContent = `現在の所持コイン: ${coins}G`; renderShopItems(); }
+function openShop() { shopContainer.classList.remove('hidden'); gameContainer.classList.add('hidden'); shopMessageEl.textContent = `現在の所持コイン: ${coins}コイン`; renderShopItems(); }
 function closeShop() { shopContainer.classList.add('hidden'); gameContainer.classList.remove('hidden'); }
 function openModal(type) {
     modalContainer.classList.remove('hidden');
@@ -210,7 +205,7 @@ function openModal(type) {
     if (!listData || listData.length === 0) { modalListEl.innerHTML = '<p>つかえるものがありません</p>'; return; }
     listData.forEach(item => {
         const btn = document.createElement('button');
-        const countText = item.count ? `(のこり:${item.count})` : `(MP:${item.cost})`;
+        const countText = item.count > 0 ? `(のこり:${item.count})` : `(MP:${item.cost})`;
         btn.innerHTML = `${item.emoji || ''} ${item.name}<br>${countText}`;
         btn.disabled = type === 'skills' && player.mp < item.cost;
         btn.onclick = () => playerTurn(type === 'skills' ? 'skill' : 'item', item.id);
@@ -242,8 +237,45 @@ function endStudySession() {
     coins += earnedCoins;
     feedbackTextEl.textContent = `おつかれさま！ ${studySessionCorrect}問せいかいで ${earnedCoins}コイン GET！`;
     updateCoinDisplay();
-    studySessionCorrect = 0; studySessionTotal = 0;
 }
 function renderShopItems() {
     shopItemsListEl.innerHTML = '';
-    SHOP_ITEMS.forEach(item =>
+    SHOP_ITEMS.forEach(item => {
+        const itemEl = document.createElement('div'); itemEl.className = 'shop-item';
+        let status = (item.type === 'weapon' && player.weapon?.id === item.id) || (item.type === 'armor' && player.armor?.id === item.id) ? ' (そうびちゅう)' : '';
+        itemEl.innerHTML = `<span>${item.emoji} ${item.name}${status}</span><button class="shop-item-buy-btn">${item.cost}コイン</button>`;
+        itemEl.querySelector('button').onclick = () => buyItem(item);
+    });
+}
+function buyItem(item) {
+    if (coins < item.cost) { shopMessageEl.textContent = 'コインがたりないよ！'; return; }
+    coins -= item.cost;
+    updateCoinDisplay();
+    shopMessageEl.textContent = `${item.name} をてにいれた！`;
+    if (item.type === 'weapon') player.weapon = item;
+    else if (item.type === 'armor') player.armor = item;
+    else if (item.type === 'item') {
+        const existingItem = player.items.find(i => i.id === item.id);
+        if (existingItem) existingItem.count++;
+        else player.items.push({ ...item, count: 1 });
+    }
+    renderShopItems();
+}
+// ===================================
+// イベントリスナー
+// ===================================
+attackBtn.addEventListener('click', () => playerTurn('attack'));
+skillsBtn.addEventListener('click', () => openModal('skills'));
+itemsBtn.addEventListener('click', () => openModal('items'));
+restartBtn.addEventListener('click', restartGame);
+studyBtn.addEventListener('click', openStudyMode);
+shopBtn.addEventListener('click', openShop);
+closeStudyBtn.addEventListener('click', closeStudyMode);
+submitAnswerBtn.addEventListener('click', handleSubmitAnswer);
+answerInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleSubmitAnswer(); });
+closeShopBtn.addEventListener('click', closeShop);
+modalCloseBtn.addEventListener('click', closeModal);
+// ===================================
+// ゲームの起動
+// ===================================
+initializeCharacterSelection();
