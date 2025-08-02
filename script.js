@@ -292,6 +292,7 @@ function renderShopItems() {
         let status = (item.type === 'weapon' && player.weapon?.id === item.id) || (item.type === 'armor' && player.armor?.id === item.id) ? ' (そうびちゅう)' : '';
         itemEl.innerHTML = `<span>${item.emoji} ${item.name}${status}</span><button class="shop-item-buy-btn">${item.cost}コイン</button>`;
         itemEl.querySelector('button').onclick = () => buyItem(item);
+        shopItemsListEl.appendChild(itemEl); // ★ この一行を追加してください
     });
 }
 function buyItem(item) {
